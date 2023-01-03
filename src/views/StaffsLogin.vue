@@ -12,7 +12,7 @@
             <label for="password" class="mb-2">Password</label>
             <input id="password" v-model="password" name="password" type="password" class="form-control" placeholder="Password" autocomplete="current-password">
           </div>
-          <button type="submit" class="btn btn-primary btn-block">Login</button>
+          <button type="submit" :disabled="isProcessing" class="btn btn-primary btn-block">Login</button>
         </form>
       </div>
     </div>
@@ -27,40 +27,47 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      isProcessing: false
     }
   },
   methods: {
-    // eslint-disable-next-line no-unused-vars
-    handleSubmit(e) {
-      if (!this.email || !this.password) {
-        Toast.fire({
-          icon: 'warning',
-          title: 'Email and Password are both required'
-        })
-        return
-      }
+    async handleSubmit(e) {
+      try {
 
-      authorizationAPI.staffLogin({
-        email: this.email,
-        password: this.password
-      }).then(response => {
+        if (!this.email || !this.password) {
+          Toast.fire({
+            icon: 'warning',
+            title: 'Email and Password are both required'
+          })
+          return
+        }
+
+        this.isProcessing = true
+
+        const response = await authorizationAPI.staffLogin({
+          email: this.email,
+          password: this.password
+        })
+
         const { data } = response
 
-        if(data.status !== 'success') {
+        if (data.status !== 'success') {
           throw new Error(data.message)
         }
 
         localStorage.setItem('token', data.token)
+
         this.$router.push('/')
-      }).catch(error => {
+      } catch (error) {
         this.password = ''
+        this.isProcessing = false
+
         Toast.fire({
           icon: 'warning',
           title: 'Email or Password incorrect'
         })
-        console.log('error', error)
-      })
+      }
     }
   }
 }
