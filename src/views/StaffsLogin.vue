@@ -6,11 +6,11 @@
         <form @submit.prevent="handleSubmit">
           <div class="mb-3">
             <label for="email" class="mb-2">Email</label>
-            <input id="email" v-model="email" name="email" type="email" class="form-control" placeholder="email" autocomplete="username" autofocus>
+            <input id="email" v-model="inputData.email" name="email" type="email" class="form-control" placeholder="email" autocomplete="username" autofocus>
           </div>
           <div class="mb-3">
             <label for="password" class="mb-2">Password</label>
-            <input id="password" v-model="password" name="password" type="password" class="form-control" placeholder="Password" autocomplete="current-password">
+            <input id="password" v-model="inputData.password" name="password" type="password" class="form-control" placeholder="Password" autocomplete="current-password">
           </div>
           <button type="submit" :disabled="isProcessing" class="btn btn-primary btn-block">Login</button>
         </form>
@@ -19,56 +19,55 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import authorizationAPI from './../apis/authorization'
 import { Toast } from '../utils/helpers'
+import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 
-export default {
-  data() {
-    return {
-      email: '',
-      password: '',
-      isProcessing: false
+const router = useRouter()
+
+const inputData = reactive({
+  email: '',
+  password: ''
+})
+const isProcessing = ref(false)
+
+// eslint-disable-next-line no-unused-vars
+const handleSubmit = async function (e) {
+  try {
+
+    if (!inputData.email || !inputData.password) {
+      Toast.fire({
+        icon: 'warning',
+        title: 'Email and Password are both required'
+      })
+      return
     }
-  },
-  methods: {
-    async handleSubmit(e) {
-      try {
+    isProcessing.value = true
 
-        if (!this.email || !this.password) {
-          Toast.fire({
-            icon: 'warning',
-            title: 'Email and Password are both required'
-          })
-          return
-        }
+    const response = await authorizationAPI.staffLogin({
+      email: inputData.email,
+      password: inputData.password
+    })
 
-        this.isProcessing = true
+    const { data } = response
 
-        const response = await authorizationAPI.staffLogin({
-          email: this.email,
-          password: this.password
-        })
-
-        const { data } = response
-
-        if (data.status !== 'success') {
-          throw new Error(data.message)
-        }
-
-        localStorage.setItem('token', data.token)
-
-        this.$router.push('/')
-      } catch (error) {
-        this.password = ''
-        this.isProcessing = false
-
-        Toast.fire({
-          icon: 'warning',
-          title: 'Email or Password incorrect'
-        })
-      }
+    if (data.status !== 'success') {
+      throw new Error(data.message)
     }
+
+    localStorage.setItem('token', data.token)
+
+    router.push('/')
+  } catch (error) {
+    inputData.password = ''
+    isProcessing.value = false
+    
+    Toast.fire({
+      icon: 'warning',
+      title: 'Email or Password incorrect'
+    })
   }
 }
 </script>
