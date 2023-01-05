@@ -24,6 +24,9 @@ import authorizationAPI from './../apis/authorization'
 import { Toast } from '../utils/helpers'
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { getCurrentStaff } from '../stores/staff'
+
+const staffStore = getCurrentStaff()
 
 const router = useRouter()
 
@@ -58,6 +61,8 @@ const handleSubmit = async function (e) {
     }
 
     localStorage.setItem('token', data.token)
+
+    staffStore.setCurrentStaff(staffStore.staff, data.staff)
 
     router.push('/')
   } catch (error) {
