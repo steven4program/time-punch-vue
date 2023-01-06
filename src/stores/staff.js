@@ -6,7 +6,8 @@ export const useStaffStore = defineStore('staff', () => {
   const staff = reactive({
     id: -1,
     name: '',
-    email: ''
+    email: '',
+    isAdmin: false
   })
 
   const isAuthenticated = ref(false)

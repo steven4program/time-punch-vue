@@ -67,12 +67,13 @@ const handleSubmit = async function (e) {
 
     router.push('/homepage')
   } catch (error) {
+    
     inputData.password = ''
     isProcessing.value = false
     
     Toast.fire({
       icon: 'warning',
-      title: 'Email or Password incorrect'
+      title: `${error.response.data.message}`
     })
   }
 }
