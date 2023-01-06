@@ -24,9 +24,9 @@ import authorizationAPI from './../apis/authorization'
 import { Toast } from '../utils/helpers'
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
-import { getCurrentStaff } from '../stores/staff'
+import { useStaffStore } from '../stores/staff'
 
-const staffStore = getCurrentStaff()
+const staffStore = useStaffStore()
 
 const router = useRouter()
 

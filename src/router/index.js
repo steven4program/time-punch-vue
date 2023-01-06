@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import StaffsLogin from '../views/StaffsLogin.vue'
 import NotFound from '../views/NotFound.vue'
+import { useStaffStore } from './../stores/staff'
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,13 @@ const router = createRouter({
       component: NotFound
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const staffStore = useStaffStore()
+  console.log('beforeEach')
+  console.log(staffStore.fetchCurrentStaff())
+  next()
 })
 
 export default router
