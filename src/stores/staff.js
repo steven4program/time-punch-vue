@@ -5,15 +5,16 @@ import staffsAPI from './../apis/staffs'
 export const useStaffStore = defineStore('staff', () => {
   const staff = reactive({
     id: -1,
+    name: '',
     email: ''
   })
 
   const isAuthenticated = ref(false)
 
+  const token = ref('')
+
   const setCurrentStaff = (staff, currentStaff) => {
-    staff.id = currentStaff.id
-    staff.name = currentStaff.name
-    staff.email = currentStaff.email
+    Object.assign(staff, currentStaff)
 
     isAuthenticated.value = true
   }
@@ -25,11 +26,28 @@ export const useStaffStore = defineStore('staff', () => {
         throw new Error(data.message)
       }
       setCurrentStaff(staff, data)
-      console.log('data', data)
+      return true
     } catch (error) {
       console.log(error)
+      return false
     }
   }
 
-  return { staff, isAuthenticated, setCurrentStaff, fetchCurrentStaff }
+  const revokeAuth = () => {
+    staff.id = -1
+    staff.name = ''
+    staff.email = ''
+    isAuthenticated.value = false
+    localStorage.removeItem('token')
+    token.value = ''
+  }
+
+  return {
+    staff,
+    isAuthenticated,
+    token,
+    setCurrentStaff,
+    fetchCurrentStaff,
+    revokeAuth
+  }
 })

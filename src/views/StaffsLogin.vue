@@ -62,9 +62,10 @@ const handleSubmit = async function (e) {
 
     localStorage.setItem('token', data.token)
 
+    staffStore.token = data.token
     staffStore.setCurrentStaff(staffStore.staff, data.staff)
 
-    router.push('/')
+    router.push('/homepage')
   } catch (error) {
     inputData.password = ''
     isProcessing.value = false

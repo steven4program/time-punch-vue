@@ -8,17 +8,19 @@ const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   linkActiveClass: 'active',
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'root',
-    //   redirect: '/staffs/login'
-    // },
     {
       path: '/',
+      name: 'root',
+      redirect: '/staffs/login'
+    },
+    {
+      path: '/homepage',
+      name: 'HomePage',
       component: HomeView
     },
     {
       path: '/staffs/login',
+      name: 'StaffsLogin',
       component: StaffsLogin
     },
     {
@@ -29,10 +31,26 @@ const router = createRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const staffStore = useStaffStore()
-  console.log('beforeEach')
-  console.log(staffStore.fetchCurrentStaff())
+  const tokenInLocal = localStorage.getItem('token')
+  const tokenInStore = staffStore.staff.token
+  let isAuthenticated = staffStore.isAuthenticated
+
+  if (tokenInLocal && tokenInLocal !== tokenInStore) {
+    isAuthenticated = await staffStore.fetchCurrentStaff()
+  }
+
+  if (!isAuthenticated && to.name !== 'StaffsLogin') {
+    next('/staffs/login')
+    return
+  }
+
+  if (isAuthenticated && to.name !== 'HomePage') {
+    next('/homepage')
+    return
+  }
+
   next()
 })
 
