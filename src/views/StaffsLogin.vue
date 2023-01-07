@@ -36,8 +36,7 @@ const inputData = reactive({
 })
 const isProcessing = ref(false)
 
-// eslint-disable-next-line no-unused-vars
-const handleSubmit = async function (e) {
+const handleSubmit = async function () {
   try {
 
     if (!inputData.email || !inputData.password) {
