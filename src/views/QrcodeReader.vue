@@ -3,8 +3,11 @@
     <div class="col-md-6 m-auto">
       <div class="card card-body">
         <p>{{ error }}</p>
-        <p>String: {{ decodedString }}</p>
-        <qrcode-stream @init="onInit" @decode="onDecode"></qrcode-stream>
+        <p>Results: {{ decodedString }}</p>
+        <qrcode-stream @decode="onDecode" @init="onInit" ></qrcode-stream>
+      </div>
+      <div class="mt-3 m-auto">
+        <router-link to="/homepage" class="btn btn-primary btn-lg">Back</router-link>
       </div>
     </div>
   </div>
@@ -13,13 +16,17 @@
 
 <script setup>
 import { QrcodeStream } from 'vue3-qrcode-reader'
+import punchAPI from '../apis/punch'
 import { ref } from 'vue'
 
 const error = ref('')
 const decodedString = ref('')
+const token = ref('')
 
 function onDecode(result) {
   decodedString.value = result
+  token.value = JSON.parse(result).token
+  punchAPI.punch()
 }
 
 async function onInit(promise) {

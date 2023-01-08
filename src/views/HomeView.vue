@@ -6,13 +6,16 @@
           <h1 class="text-center mt-1">You are using titanSoft Punch APP</h1>
           <h4 class="text-center text-info" v-if="punchData.status"><strong>{{ punchData.currentTime }}</strong> {{ punchData.message }}
           </h4>
-          <div class="mt-3 m-auto">
+          <div class="mt-3 m-auto" v-if="!store.staff.isAdmin">
             <button type="button" class="btn btn-primary btn-lg" @click="punch">Punch</button>
           </div>
-          <div class="mt-3 m-auto">
-            <button type="button" class="btn btn-primary btn-lg">QRCode</button>
+          <div class="mt-3 m-auto" v-if="store.staff.isAdmin">
+            <router-link to="/qrcode/generator" class="btn btn-primary btn-lg">QRCode Generator</router-link>
           </div>
-          <div class="mt-3 m-auto" >
+          <div class="mt-3 m-auto" v-if="!store.staff.isAdmin">
+            <router-link to="/qrcode/reader" class="btn btn-primary btn-lg">QRCode Scanner</router-link>
+          </div>
+          <div class="mt-3 m-auto" v-if="!store.staff.isAdmin">
             <router-link to="/staffs/change_password" class="btn btn-primary btn-lg">Change Password</router-link>
           </div>
         </div>
