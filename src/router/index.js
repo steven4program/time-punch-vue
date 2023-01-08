@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import StaffsLogin from '../views/StaffsLogin.vue'
+import ChangePassword from '../views/ChangePassword.vue'
 import QrcodeGenerator from '../views/QrcodeGenerator.vue'
 import QrcodeReader from '../views/QrcodeReader.vue'
 import NotFound from '../views/NotFound.vue'
@@ -24,6 +25,11 @@ const router = createRouter({
       path: '/staffs/login',
       name: 'StaffsLogin',
       component: StaffsLogin
+    },
+    {
+      path: '/staffs/change_password',
+      name: 'ChangePassword',
+      component: ChangePassword
     },
     {
       path: '/qrcode/generator',

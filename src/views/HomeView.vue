@@ -12,6 +12,9 @@
           <div class="mt-3 m-auto">
             <button type="button" class="btn btn-primary btn-lg">QRCode</button>
           </div>
+          <div class="mt-3 m-auto" >
+            <router-link to="/staffs/change_password" class="btn btn-primary btn-lg">Change Password</router-link>
+          </div>
         </div>
       </div>
     </div>
