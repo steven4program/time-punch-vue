@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import StaffsLogin from '../views/StaffsLogin.vue'
+import QrcodeGenerator from '../views/QrcodeGenerator.vue'
+import QrcodeReader from '../views/QrcodeReader.vue'
 import NotFound from '../views/NotFound.vue'
 import { useStaffStore } from './../stores/staff'
 
@@ -22,6 +24,16 @@ const router = createRouter({
       path: '/staffs/login',
       name: 'StaffsLogin',
       component: StaffsLogin
+    },
+    {
+      path: '/qrcode/generator',
+      name: 'QrcodeGenerator',
+      component: QrcodeGenerator
+    },
+    {
+      path: '/qrcode/reader',
+      name: 'QrcodeReader',
+      component: QrcodeReader
     },
     {
       path: '/:catchAll(.*)',
@@ -46,7 +58,7 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  if (isAuthenticated && to.name !== 'HomePage') {
+  if (isAuthenticated && to.name === 'StaffsLogin') {
     next('/homepage')
     return
   }

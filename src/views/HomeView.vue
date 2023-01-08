@@ -2,12 +2,15 @@
     <div class="row mt-5">
       <div class="col-md-6 m-auto">
         <div class="card card-body">
-          <h1 class="text-center mt-3">Punch in to TitanSoft</h1>
+          <h1 class="text-center mt-3">Welcome <strong>{{ store.staff.name }}</strong></h1>
+          <h1 class="text-center mt-1">You are using titanSoft Punch APP</h1>
+          <h4 class="text-center text-info" v-if="punchData.status"><strong>{{ punchData.currentTime }}</strong> {{ punchData.message }}
+          </h4>
           <div class="mt-3 m-auto">
-            <button type="button" class="btn btn-info btn-lg" @click="punch">Punch</button>
+            <button type="button" class="btn btn-primary btn-lg" @click="punch">Punch</button>
           </div>
           <div class="mt-3 m-auto">
-            <button type="button" class="btn btn-info btn-lg">QRCode</button>
+            <button type="button" class="btn btn-primary btn-lg">QRCode</button>
           </div>
         </div>
       </div>
@@ -16,9 +19,18 @@
 
 <script setup>
 import punchAPI from './../apis/punch'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
+import { useStaffStore } from './../stores/staff'
+
+const store = useStaffStore()
 
 const isProcessing = ref(false)
+
+const punchData = reactive({
+  status: false,
+  message: '',
+  currentTime: ''
+})
 
 const punch = async function () {
   const titanCrd = {
@@ -33,9 +45,12 @@ const punch = async function () {
     isProcessing.value = true
 
     const response = await punchAPI.punch()
-    console.log(response)
+    punchData.message = response.data.message
+    punchData.currentTime = response.data.formatCurrentTime
+    punchData.status = true
     return
   }
+
   return console.log(`Distance is ${distance}, too far from company`)
 
   function deg2rad(deg) {

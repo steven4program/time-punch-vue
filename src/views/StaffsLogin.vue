@@ -6,11 +6,11 @@
         <form @submit.prevent="handleSubmit">
           <div class="mb-3">
             <label for="email" class="mb-2">Email</label>
-            <input id="email" v-model="inputData.email" name="email" type="email" class="form-control" placeholder="email" autocomplete="username" autofocus>
+            <input id="email" v-model.trim="inputData.email" name="email" type="email" class="form-control" placeholder="email" autocomplete="username" autofocus>
           </div>
           <div class="mb-3">
             <label for="password" class="mb-2">Password</label>
-            <input id="password" v-model="inputData.password" name="password" type="password" class="form-control" placeholder="Password" autocomplete="current-password">
+            <input id="password" v-model.trim="inputData.password" name="password" type="password" class="form-control" placeholder="Password" autocomplete="current-password">
           </div>
           <button type="submit" :disabled="isProcessing" class="btn btn-primary btn-block">Login</button>
         </form>
@@ -26,7 +26,7 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStaffStore } from '../stores/staff'
 
-const staffStore = useStaffStore()
+const store = useStaffStore()
 
 const router = useRouter()
 
@@ -61,8 +61,8 @@ const handleSubmit = async function () {
 
     localStorage.setItem('token', data.token)
 
-    staffStore.token = data.token
-    staffStore.setCurrentStaff(staffStore.staff, data.staff)
+    store.token = data.token
+    store.setCurrentStaff(store.staff, data.staff)
 
     router.push('/homepage')
   } catch (error) {
